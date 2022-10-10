@@ -1,2 +1,5 @@
 AllCops:
   TargetRubyVersion: 3.x
+
+Layout/LineLength:
+  Max: 150
