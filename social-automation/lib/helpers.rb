@@ -4,6 +4,10 @@ def extract_number(string)
   string.strip.gsub(/\D/, '').to_i
 end
 
+def get_gender(string)
+  string.split(' ')[0].gsub(/\d/, '')
+end
+
 def colorize(value, color)
   case color
   when :red then puts "\e[31m#{value}\e[0m"
