@@ -6,7 +6,7 @@ require_relative './database'
 
 require_relative './helpers'
 
-require_relative '../secrets'
+require_relative './secrets'
 
 require_relative './selectors'
 

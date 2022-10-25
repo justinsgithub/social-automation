@@ -4,7 +4,7 @@ require 'mongo'
 
 require_relative './helpers'
 
-require_relative '../secrets'
+require_relative './secrets'
 
 US_DB = Mongo::Client.new(MONGO_URI, database: 'unitedStates')
 

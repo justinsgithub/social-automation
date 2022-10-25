@@ -2,7 +2,7 @@
 
 require 'selenium-webdriver'
 
-require_relative '../secrets'
+require_relative './secrets'
 
 require_relative './helpers'
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../secrets'
+require_relative './secrets'
 
 require_relative './helpers'
 
