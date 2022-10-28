@@ -1,21 +1,36 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (7.0.4)
+      activesupport (= 7.0.4)
+    activesupport (7.0.4)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
     ast (2.4.2)
     backport (1.2.0)
     benchmark (0.2.0)
     bson (4.15.0)
     childprocess (4.1.0)
+    concurrent-ruby (1.1.10)
     diff-lcs (1.5.0)
     e2mmap (0.1.0)
+    i18n (1.12.0)
+      concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
     json (2.6.2)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
+    minitest (5.16.3)
     mongo (2.18.1)
       bson (>= 4.14.1, < 5.0.0)
+    mongoid (7.5.1)
+      activemodel (>= 5.1, < 7.1, != 7.0.0)
+      mongo (>= 2.10.5, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
     nokogiri (1.13.8-x86_64-linux)
       racc (~> 1.4)
     parallel (1.22.1)
@@ -23,6 +38,7 @@ GEM
       ast (~> 2.4.1)
     racc (1.6.0)
     rainbow (3.1.1)
+    rake (13.0.6)
     regexp_parser (2.6.0)
     reverse_markdown (2.1.1)
       nokogiri
@@ -40,6 +56,7 @@ GEM
     rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     selenium-webdriver (4.5.0)
       childprocess (>= 0.5, < 5.0)
@@ -63,6 +80,8 @@ GEM
       yard (~> 0.9, >= 0.9.24)
     thor (1.2.1)
     tilt (2.0.11)
+    tzinfo (2.0.5)
+      concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
     webrick (1.7.0)
     websocket (1.2.9)
@@ -74,8 +93,13 @@ PLATFORMS
 
 DEPENDENCIES
   mongo
+  mongoid (~> 7.3)
+  rake
   selenium-webdriver
   solargraph
+
+RUBY VERSION
+   ruby 3.1.2p20
 
 BUNDLED WITH
    2.3.20

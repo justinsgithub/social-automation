@@ -1,9 +1,11 @@
 ---
 include:
-- "**/*.rb"
+- "lib/**/*.rb"
+- "test/**/*.rb"
+- "vendor/bundle/ruby/3.1.0/gems/mongo-2.18.1/**/*.rb"
+- "vendor/bundle/ruby/3.1.0/gems/mongoid-7.5.1/**/*.rb"
+- "vendor/bundle/ruby/3.1.0/gems/selenium-webdriver-4.5.0/**/*.rb"
 exclude:
-- spec/**/*
-- test/**/*
 - ".bundle/**/*"
 require: []
 domains: []

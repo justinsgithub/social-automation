@@ -28,4 +28,3 @@ def colorize(value, color)
   else puts "\e[30m#{value}\e[0m"
   end
 end
-

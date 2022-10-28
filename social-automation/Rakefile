@@ -1,0 +1,9 @@
+task default: %w[test]
+
+task :run do
+  ruby 'test/mong.rb'
+end
+
+task :test do
+  ruby 'test/selenium_example.rb'
+end
