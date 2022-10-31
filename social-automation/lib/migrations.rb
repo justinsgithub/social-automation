@@ -12,30 +12,6 @@ require_relative './secrets'
 
 require_relative 'models'
 
-# CITIES_DB = Mongo::Client.new(MONGO_URI, database: 'CitiesData')
-#
-# US_USERS = Mongo::Client.new(MONGO_URI, database: 'UnitedStatesUsersData')
-#
-# ALL_USERS = Mongo::Client.new(MONGO_URI, database: 'users')
-
-# def cities_pages_to_scrape(state_name)
-#   colorize("GETTING USERS PAGE URL FOR ALL CITIES IN #{state_name} \n", :green)
-#
-#   city_links = US_DB[state_name].find({ name: state_name }).first[:cityLinks]
-#
-#   completed_city_links = US_DB[state_name].find({ name: state_name }).first[:completedCities]
-#
-#   colorize("SCRAPED #{completed_city_links.length} CITIES FOR USER DATA \n", :green)
-#
-#   # user_links = [f'{link}/{my_vars["users"]}' for link in city_links]
-#
-#   # USERS is a unique nickname that the website uses that I do not want visible to the public
-#
-#   puts "CITIES TO SCRAPE: \n"
-#
-#   city_links.map { |link| !completed_city_links.include?("#{link}/#{USERS}") ? "#{link}/#{USERS}" : nil }.compact
-# end
-
 def us_states_data
   db = Mongo::Client.new(MONGO_URI, database: 'unitedStates')
 
@@ -84,6 +60,33 @@ def migrate_all_cities
   State.all.map(&:name).each { |state_name| migrate_state_cities(state_name) }
 end
 
+def state_members(state)
+  Mongo::Client.new(MONGO_URI, database: 'users').database.collection(state).find
+end
+
+def migrate_member(member_data)
+  member = Member.create(uid: member_data[:site_id],
+                         age: member_data[:age],
+                         gender: member_data[:gender],
+                         username: member_data[:userName],
+                         style: member_data[:style],
+                         page_url: member_data[:profileLink],
+                         pictures_page_url: member_data[:pictureLink],
+                         state: State.where(name: member_data[:state]).first)
+  member.persisted? == true ? member : DataError.create!(member.attributes)
+end
+
+def migrate_state_members(state)
+  state_members(state).each { |member| puts migrate_member(member) }
+end
+
+def migrate_all_state_members
+  Mongo::Client.new(MONGO_URI, database: 'users').database.collection_names.each { |state_name| puts migrate_state_members(state_name) }
+end
+
+# migrate_all_state_members
+# colorize(migrate_member(state_members(:Colorado).first), :green)
+# colorize(state_members(:Colorado), :green)
 # colorize(us_states_data, :blue)
 # colorize(migrate_state(:Washington), :blue)
 # colorize(migrate_states, :blue)

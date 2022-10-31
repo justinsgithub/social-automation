@@ -46,12 +46,14 @@ end
 class Member
   include Mongoid::Document
   include Mongoid::Timestamps
-  field :site_id, type: String
+  field :uid, type: String
   field :age, type: Integer
   field :gender, type: String
   field :username, type: String
   field :orientation, type: String
   field :style, type: String
+  field :interests, type: Array
+  field :curiosities, type: Array
   field :page_url, type: String
   field :pictures_page_url, type: String
   field :picture_urls, type: Array
@@ -59,10 +61,10 @@ class Member
   field :total_followers, type: Integer
   field :total_friends, type: Integer
   field :last_activity, type: Date
-  belongs_to :city
-  belongs_to :state
-  validates :site_id, :age, :gender, :username, :page_url, :pictures_page_url, presence: true
-  validates_uniqueness_of :site_id, :username
+  belongs_to :city, optional: true
+  belongs_to :state, optional: true
+  validates :uid, :age, :gender, :username, :page_url, :pictures_page_url, presence: true
+  validates_uniqueness_of :uid, :username
 end
 
 class DataError
@@ -72,6 +74,36 @@ class DataError
   include Mongoid::Attributes::Dynamic
 end
 
+class Session
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  field :total_friends, type: Integer
+  field :total_followers, type: Integer
+  field :total_following, type: Integer
+  field :pages_requested, type: Array
+  field :pictures_liked, type: Array
+  embedded_in :user
+end
+
+class User
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  field :username, type: String
+  field :members_liked, type: Array
+  embeds_many :sessions
+  validates_uniqueness_of :username
+end
+
+# user = User.where(username: 'zumbettella2').first
+# user ? nil : user = User.create!(username: 'zumbettella2')
+# puts user.sessions.create!(pages_requested: ['bliakhjsdcf2'], pictures_liked: ['poierjnmgpoeiwrj2'])
+
+# member = Member.where(gender: 'M', age: 29).first
+# member.sessions.create!(pages_requested:)
+# member.set(sess)
+
+# users = Member.where(gender: 'M', age: 29)
+# puts users
 # state = State.where(name: 'Washington').first
 # puts state.cities.first.attributes
 # city = City.where(name: 'Spokane').first
@@ -95,19 +127,19 @@ end
 #                       total_cities: 400)
 # colorize(state.attributes, :green)
 
-# user = User.create!(
-#   site_id: '102934',
+# member = Member.create!(
+#   uid: '102934',
 #   age: 20,
 #   gender: 'M',
 #   username: 'SpokaneUser2',
 #   orientation: 'Straight',
 #   style: 'Exploring',
 #   page_url: 'blah.com',
-#   pictures_page_url: 'blank',
-#   city: city,
-#   state: city.state
+#   pictures_page_url: 'blank'
+#   # city: city,
+#   # state: city.state
 # )
 #
-# colorize(user.attributes, :green)
-# colorize(user.state.attributes, :blue)
-# colorize(user.city.attributes, :blue)
+# puts member.attributes
+# colorize(member.state.attributes, :blue)
+# colorize(member.city.attributes, :blue)
