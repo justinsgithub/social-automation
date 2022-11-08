@@ -16,5 +16,5 @@ S = {
   view_picture_elements: "//main//div//a[@class='link gray hover-gray-300 dot-separated'][1]",
   username_elements: "//a[@class='link f5 fw7 secondary mr1']",
   picture_url: "//a[@class='aspect-ratio--1x1 relative db bg-animate no-underline overflow-hidden br1 tap-highlight-transparent bg-gray-900 hover-bg-gray-950']",
-  last_post: '//*[@id="ptr-main-element"]//div/main//a/time',
+  last_post: '//*[@id="ptr-main-element"]//div/main//a/time'
 }.freeze

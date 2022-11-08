@@ -54,13 +54,15 @@ class Member
   field :style, type: String
   field :interests, type: Array
   field :curiosities, type: Array
+  field :looking_for, type: Array
+  field :active, type: String
   field :page_url, type: String
   field :pictures_page_url, type: String
   field :picture_urls, type: Array
   field :total_pictures, type: Integer
   field :total_followers, type: Integer
   field :total_friends, type: Integer
-  field :last_activity, type: Date
+  field :latest_activity, type: Date
   belongs_to :city, optional: true
   belongs_to :state, optional: true
   validates :uid, :age, :gender, :username, :page_url, :pictures_page_url, presence: true
@@ -77,6 +79,7 @@ end
 class Session
   include Mongoid::Document
   include Mongoid::Timestamps
+  field :runtime, type: Float # in seconds
   field :total_friends, type: Integer
   field :total_followers, type: Integer
   field :total_following, type: Integer

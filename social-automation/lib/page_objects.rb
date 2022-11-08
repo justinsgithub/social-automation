@@ -4,10 +4,6 @@ require 'selenium-webdriver'
 
 require_relative './secrets'
 
-# require_relative './helpers'
-
-require_relative './models'
-
 require_relative './selectors'
 
 options = Selenium::WebDriver::Chrome::Options.new
@@ -25,6 +21,7 @@ class PageObject
   def initialize(url)
     @url = url
     DRIVER.get(url)
+    sleep(0.5)
     @title = DRIVER.title
   end
 
@@ -34,6 +31,20 @@ class PageObject
 
   def click(find_by, selector)
     DRIVER.execute_script('arguments[0].click()', DRIVER.find_element(find_by, selector))
+  end
+
+  def texts(find_by, selector)
+    texts = []
+    e = DRIVER.find_elements(find_by, selector)
+    !e.empty? && texts = e.map(&:text)
+    texts
+  end
+
+  def text(find_by, selector)
+    text = 'not found'
+    e = DRIVER.find_elements(find_by, selector)
+    !e.empty? && text = e.first.text
+    text
   end
 
   def hrefs(find_by, selector)
@@ -81,44 +92,73 @@ class PicturesPage < PageObject
   end
 end
 
+# user / member profile page
+class ProfilePage < PageObject
+  def username
+    text(:xpath, '//*[@id="ptr-main-element"]/div[2]/div/header[1]/div/div[1]/main/div/div[1]/div[2]/h1/span[1]')
+  end
+
+  def age_gender_style
+    text(:xpath, '//span[@class="fw7 gray-200 f4-l f16 dib us-none"]')
+  end
+
+  def age
+    age_gender_style.strip.gsub(/\D/, '').to_i
+  end
+
+  def gender
+    age_gender_style.split(' ')[0].split(' ')[0].gsub(/\d/, '')
+  end
+
+  def style
+    age_gender_style.split(' ')[-1]
+  end
+
+  def city
+    city = text(:xpath, '//*[@id="ptr-main-element"]/div[2]/div/header[1]/div/div[1]/main/div/div[1]/div[2]/p/span[1]/a')
+    city == 'not found' && city = 'Antartica'
+    city
+  end
+
+  def extra_categories
+    texts(:xpath, '//div[@class="flex-none w140-ns gray-400 f5"]')
+  end
+
+  def orientation
+    orientation = 'Not Applicable'
+    (extra_categories.include? 'Orientation') && orientation = text(:xpath, '//span[@class="bb bt-0 br-0 bl-0 b-gray-400 b-dotted mr1"]')
+    orientation
+  end
+
+  def active
+    active = 'Not Applicable'
+    (extra_categories.include? 'Active') && active = text(:xpath, '//div[contains(text(), "Active")]/following-sibling::div[1]')
+    active
+  end
+
+  def looking_for
+    looking_for = []
+    (extra_categories.include? 'Looking for') && looking_for = texts(:xpath, '//div[@class="flex-auto mv0 gray-150 flex-auto"]/div')
+    looking_for
+  end
+
+  def number_of_pictures
+    num_pics = 0
+    text = text(:xpath, '//a[@title="View all pictures"]')
+    text != 'not found' && num_pics = text(:xpath, '//a[@title="View all pictures"]/following-sibling::span[1]').strip.gsub(/\D/, '').to_i
+    num_pics
+  end
+
+  def latest_activity
+    sleep(0.5)
+    scroll_to_bottom
+    sleep(0.5)
+    e = DRIVER.find_elements(:xpath, '//span[@class="f6 gray-500 nowrap"]/span[2]/time') # .attribute 'datetime'
+    e.empty? ? nil : e.first.attribute('datetime')
+  end
+end
+
 # login_page = LoginPage.new("#{BASE_URL}/home")
 # puts login_page.url
 # puts login_page.title
 # login_page.login(USERNAME, PASSWORD)
-
-def init(username, password)
-  login_page = LoginPage.new("#{BASE_URL}/home")
-  login_page.login(username, password)
-  user = User.where(username: username).first
-  user ? nil : user = User.create!(username: username)
-  user
-  # puts user.sessions.create!(pages_requested: ['bliakhjsdcf2'], pictures_liked: ['poierjnmgpoeiwrj2'])
-end
-
-def like_pictures
-  user = init(USERNAME, PASSWORD)
-  pages_requested = []
-  pictures_liked = []
-  members_liked = []
-  members = Member.where(gender: 'M', state: State.where(name: :Idaho).first).limit(200)
-  members.each do |member|
-    pictures_page = PicturesPage.new(member.pictures_page_url)
-    pages_requested.push(member.pictures_page_url)
-    pic_urls = pictures_page.picture_urls
-    pic_urls.length > 3 && pic_urls = pic_urls[0..2]
-    pic_urls.each do |url|
-      DRIVER.get(url)
-      pages_requested.push(url)
-      pictures_page.scroll_to_bottom
-      pictures_page.like_picture
-      pictures_liked.push(url)
-      sleep 1
-    end
-    members_liked.push(member._id)
-  rescue Error => e
-    puts e
-    next
-  end
-  user.update_attributes!(members_liked: members_liked)
-  user.sessions.create!(pages_requested: pages_requested, pictures_liked: pictures_liked)
-end
