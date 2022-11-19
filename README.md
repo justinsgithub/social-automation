@@ -1,6 +1,4 @@
-# two-barrels
-
-Ruby and Vue code to show Two Barrels 
+# social automation
 
 ## projects 
 
