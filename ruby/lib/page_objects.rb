@@ -18,11 +18,18 @@ DRIVER.manage.window.maximize
 class PageObject
   attr_reader :url, :title
 
+  @@page_requests = []
+
   def initialize(url)
     @url = url
     DRIVER.get(url)
+    @@page_requests.push(url)
     sleep(0.5)
     @title = DRIVER.title
+  end
+
+  def self.page_requests
+    @@page_requests
   end
 
   def send_keys(find_by, selector, text)
@@ -130,6 +137,19 @@ class ProfilePage < PageObject
     orientation
   end
 
+  def fff
+    sleep 1
+    scroll_to_bottom
+    sleep 1
+    arr = texts(:xpath, '//a[@class="link gray-400 hover-gray-300"]')
+    puts(arr)
+    {
+      friends: safe_extract_number(arr.select { |t| t.include? 'Friends' }.first) || 0,
+      followers: safe_extract_number(arr.select { |t| t.include? 'Followers' }.first) || 0,
+      following: safe_extract_number(arr.select { |t| t.include? 'Following' }.first) || 0
+    }
+  end
+
   def active
     active = 'Not Applicable'
     (extra_categories.include? 'Active') && active = text(:xpath, '//div[contains(text(), "Active")]/following-sibling::div[1]')
@@ -157,6 +177,10 @@ class ProfilePage < PageObject
     e.empty? ? nil : e.first.attribute('datetime')
   end
 end
+
+# 3.times { ProfilePage.new('https://google.com') }
+#
+# puts PageObject.page_requests
 
 # login_page = LoginPage.new("#{BASE_URL}/home")
 # puts login_page.url

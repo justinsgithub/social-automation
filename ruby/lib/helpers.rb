@@ -4,6 +4,10 @@ def extract_number(string)
   string.strip.gsub(/\D/, '').to_i
 end
 
+def safe_extract_number(string)
+  string.is_a?(String) ? string.strip.gsub(/\D/, '').to_i : nil
+end
+
 def get_gender(string)
   string.split(' ')[0].gsub(/\d/, '')
 end

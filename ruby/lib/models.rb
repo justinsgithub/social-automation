@@ -91,6 +91,7 @@ end
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
+  field :page_url, type: String
   field :username, type: String
   field :members_liked, type: Array
   embeds_many :sessions
