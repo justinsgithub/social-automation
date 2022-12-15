@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'selenium-webdriver'
+import 'selenium-webdriver'
 
 require_relative './secrets'
 

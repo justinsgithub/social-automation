@@ -1,0 +1,26 @@
+{
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "src/experimental",
+        "src/typestubs"
+    ],
+    "ignore": [
+        "src/oldstuff"
+    ],
+    "defineConstant": {
+        "DEBUG": true
+    },
+    "stubPath": "src/stubs",
+    "strict": "src/**",
+    "venvPath": "env",
+    "venv": "env",
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "pythonVersion": "3.10",
+    "typeCheckingMode": "strict",
+    "pythonPlatform": "Linux"
+}
