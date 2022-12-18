@@ -20,7 +20,12 @@
     "venv": "env",
     "reportMissingImports": true,
     "reportMissingTypeStubs": false,
-    "pythonVersion": "3.10",
+    "reportUnknownParameterType": "none",
+    "reportUnknownArgumentType": "none",
+    "reportUnknownLambdaType": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnknownMemberType": "none",
+    "pythonVersion": "3.11",
     "typeCheckingMode": "strict",
     "pythonPlatform": "Linux"
 }
